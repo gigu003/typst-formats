@@ -82,6 +82,18 @@
   },
   footer: none
   )
+
+set enum(
+  numbering: "1.",
+  body-indent: 0.5em,
+  spacing: 1.1em,
+)
+set list(
+  body-indent: 0.5em,
+  spacing: 1.1em,
+)
+
+
   set par(justify: true)
   set text(lang: lang,
            region: region,
