@@ -1,3 +1,0 @@
-"0","#| fig-width: 8"
-"0","#| fig-height: 5"
-"0","barplot(c(1:5), col= ""green"")"

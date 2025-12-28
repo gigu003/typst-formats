@@ -1,7 +1,0 @@
-[1,"==> quarto preview template.qmd --to qcreport-typst --no-watch-inputs --no-browse\n\n"]
-[1,"\u001B[1mpandoc \u001B[22m\n  to: typst\n  output-file: template.typ\n  standalone: true\n  shift-heading-level-by: -1\n  default-image-extension: svg\n  wrap: none\n  citeproc: false\n  \n\u001B[1mmetadata\u001B[22m\n  title: |\n    河南省\\\n    肿瘤登记质量控制报告\n  subtitle: 第一季度\n  date: today\n  registry: 河南省肿瘤登记处\n  header: 质控报告\n  footer: 'https://chenq.site'\n  section-numbering: '1.'\n  authors:\n    - name: 陈 琼\n      email: chenq08@126.com\n      affiliation: 河南省肿瘤医院\n  mainfont: song\n  \n"]
-[1,"[typst]: Compiling template.typ to template.pdf..."]
-[1,"DONE\n\nOutput created: template.pdf\n\n\u001B[32mWatching files for changes\u001B[39m\n\u001B[32mBrowse at \u001B[39m\u001B[4m\u001B[32mhttp://localhost:5055/web/viewer.html\u001B[39m\u001B[24m\n"]
-[1,"\u001B[1mpandoc \u001B[22m\n  to: typst\n  output-file: template.typ\n  standalone: true\n  shift-heading-level-by: -1\n  default-image-extension: svg\n  wrap: none\n  citeproc: false\n  \n\u001B[1mmetadata\u001B[22m\n  title: |\n    河南省\\\n    肿瘤登记质量控制报告\n  subtitle: 第一季度\n  date: today\n  registry: 河南省肿瘤登记处\n  header: 质控报告\n  footer: 'https://chenq.site'\n  section-numbering: '1.'\n  authors:\n    - name: 陈 琼\n      email: chenq08@126.com\n      affiliation: 河南省肿瘤医院\n  mainfont: song\n  \n"]
-[1,"[typst]: Compiling template.typ to template.pdf..."]
-[1,"DONE\n\nOutput created: template.pdf\n\n\u001B[32mWatching files for changes\u001B[39m\n"]
