@@ -1,0 +1,2 @@
+"0","asr_inci <- create_asr(canregs[[1]], sex, cancer)"
+"0","asr_mort <- create_asr(canregs[[1]],sex, cancer, event = ""sws"")"

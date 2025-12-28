@@ -1,0 +1,422 @@
+
+```{r}
+site_cn <- c("口腔","鼻咽","食管","胃","结直肠","肝","胆囊","胰腺","喉","肺",
+          "骨","女性乳腺","子宫颈","子宫体","卵巢","前列腺","肾及泌尿系统不明",
+          "膀胱","脑","甲状腺","淋巴瘤","白血病")
+site_en <- c("oral cavity & pharynx", "nasopharynx", "esophagus", "stomach",
+             "colon rectum", "liver", "gallbladder", "pancreas", "larynx",
+             "lung", "bone", "female breast", "cervix", "uterus", "ovary",
+             "prostate", "kidney & unspecified urinary organs", "bladder",
+             "brain", "thyroid", "lymphoma", "leukemia")
+title_cn <- site_cn[as.numeric(cancer_code) - 100]
+title_en <- site_en[as.numeric(cancer_code) - 100]
+title_ens <- str_to_title(title_en)
+k <- as.numeric(cancer_code) - 100
+```
+
+## `r title_cn`
+
+```{r}
+#| output: asis
+#| include: !expr as.numeric(cancer_code) %in% c(101:111, 117:122)
+sex_ratio1 <- round(site[2,6] / site[3,6], 2)
+sex_ratio2 <- round(site[11,6] / site[12,6], 2)
+area_ratio1 <- round(site[4,6] / site[7,6], 2)
+area_ratio2 <- round(site[13,6] / site[16,6], 2)
+des1 <- gen_des1(type = "中标发病率", sex_ratio1, area_ratio1, cancer_code, lang = "zh-cn")
+des2 <- gen_des1(type = "中标死亡率", sex_ratio2, area_ratio2, cancer_code, lang = "zh-cn")
+
+part1 <- paste(year, "年，",province,"肿瘤登记地区",title_cn,"癌的发病率为",site[1,4],"/10万，中标率为",site[1,6],"/10万，世标率为",site[1,7],"/10万，发病例数占全部癌症新发病例数的",site[1,5],"%；","其中，男性和女性发病率分别为",site[2,4],"/10万和",site[3,4],"/10万，城市地区和农村地区发病率分别为",site[4,4],"/10万和",site[7,4],"/10万；",des1, sep="")
+
+part2 <- paste("同期，",title_cn,"癌的死亡率为",site[10,4],"/10万，中标率为",site[10,6],"/10万，世标率为",site[10,7],"/10万，死亡病例数占全部癌症死亡病例数的",site[10,5],"%；","其中，男性和女性死亡率分别为",site[11,4],"/10万和",site[12,4],"/10万，城市地区和农村地区死亡率分别为",site[13,4],"/10万和",site[16,4],"/10万；",des2,sep="")
+
+cat(part1, sep = '\n')
+cat(part2)
+cat(paste0("（见表5-", k, "）"))
+```
+
+```{r}
+#| output: asis
+#| include: !expr as.numeric(cancer_code) %in% c(112:116)
+
+area_ratio1 <- round(site[2,6] / site[3,6], 2)
+area_ratio2 <- round(site[5,6] / site[6,6], 2)
+des1 <- gen_des1(type = "中标发病率", sex_ratio1, area_ratio1, cancer_code, lang = "zh-cn")
+des2 <- gen_des1(type = "中标死亡率", sex_ratio2, area_ratio2, cancer_code, lang = "zh-cn")
+
+part1 <- paste(year,"年，",province,"肿瘤登记地区",title_cn,"癌的发病率为",site[1,4],"/10万，中标率为",site[1,6],"/10万，世标率为",site[1,7],"/10万，发病例数占全部癌症新发病例数的",site[1,5],"%；","其中，城市地区和农村地区发病率分别为",site[2,4],"/10万和",site[3,4],"/10万；",des1,sep="")
+
+part2 <- paste("同期，",title_cn,"癌的死亡率为",site[4,4],"/10万，中标率为",site[4,6],"/10万，世标率为",site[4,7],"/10万，死亡病例数占全部癌症死亡病例数的",site[4,5],"%；","其中，城市地区和农村地区死亡率分别为",site[5,4],"/10万和",site[6,4],"/10万；",des2,sep="") 
+
+cat(part1, sep = '\n')
+cat(part2)
+cat(paste0("（见表5-", k, "）\n"))
+```
+
+
+```{r}
+#| output: asis
+glue::glue("表 5-{k}: {year}年{province}肿瘤登记地区{title_cn}癌发病死亡情况")
+```
+
+
+```{r}
+#| tbl-cap: !expr 'paste0("表 5-",k,":  ",year,"年",province,"肿瘤登记地区",title_cn,"癌发病死亡情况")'
+#| include: !expr as.numeric(cancer_code) %in% c(101:111,117:122)
+## 准备数据
+data <- site |> 
+  select(-code, -cate, -cate2) |> 
+    mutate(name = ifelse(name == "全省", "全省\n(All)",
+                       ifelse(name == "城市地区", "城市地区\n(Urban area)",
+                              ifelse(name == "农村地区", "农村地区\n(Rural area)",name))),
+         sex = ifelse(sex == "合计", "合计(All)",
+                      ifelse(sex == "男性", "男性(Male)",
+                             ifelse(sex == "女性", "女性(Female)",sex))),
+         type = ifelse(type == "发病", "发病(Incidence)", "死亡(Mortality)")) |>
+  as_grouped_data(groups = c("type"))
+## 设置表格表头
+header <- data.frame(
+  col_keys = colnames(data),
+  first = c(" ","地区\nArea","性别\nGender","病例数\nCases","粗率",
+            "构成","中标率","世标率","累积率\nCumulate Rate\n0-74(%)"))
+
+## 制作表格
+data <- data |> flextable()
+data <- merge_at(data, i = 1, j = 1:8)
+#data <- merge_at(data, i = 11, j = 1:8)
+data <- set_header_df(data, mapping = header, key = "col_keys")
+data <- colformat_num(data, j = 5:9, digits = 5.2) 
+data <- data |> 
+  compose(j = 5, value = as_paragraph("粗率\nCrude Rate\n(1/10", as_sup("5"), ")"),
+          part = "header") |> 
+  compose(j = 6, value = as_paragraph("构成\nProportion\n(%)"),
+          part = "header") |> 
+  compose(j = 7, value = as_paragraph("中标率\nASR China\n(1/10", as_sup("5"), ")"),
+          part = "header") |> 
+  compose(j = 8, value = as_paragraph("世标率\nASR World\n(1/10", as_sup("5"), ")"),
+          part = "header") |> 
+  align(align = "center", part = "all") |> 
+  bold(bold = TRUE, part = "header") |> 
+  width(j = 1, width = 0.3) |>
+  width(j = 2, width = 0.8) |> 
+  width(j = 3, width = 0.9) |> 
+  width(j = c(4:5, 7:8), width = 0.6) |> 
+  width(j = c(6), width = 0.8) |> 
+  #width(j = c(7:8), width = 0.5) |> 
+  align(j = c(2:3), align = "right", part = "all") |> 
+  fontsize(size = 9, part = "all") |>
+  theme_booktabs()
+data
+```
+
+
+```{r}
+#| tbl-cap: !expr 'paste0("表 5-",k,":  ",year,"年",province,"肿瘤登记地区",title_cn,"癌发病死亡情况")'
+#| include: !expr as.numeric(cancer_code) %in% c(112, 113, 114, 115, 116)
+data <- site |>
+  select(-code,-sex,-cate,-cate2) |> 
+  mutate(name = ifelse(name == "全省", "全省\n(All)",
+                       ifelse(name == "城市地区", "城市地区\n(Urban area)",
+                              ifelse(name == "农村地区", "农村地区\n(Rural area)",name))),
+         type = ifelse(type == "发病", "发病(Incidence)", "死亡(Mortality)")) |> 
+  as_grouped_data(groups = c("type"))
+header <- data.frame(
+  col_keys = colnames(data),
+  first=c(" ", "地区\nArea", "病例数\nCases", "粗率",
+          "构成", "中标率", "世标率", "累积率\nCumulate Rate\n0-74(%)"))
+
+data |> 
+  flextable() |> 
+  set_header_df(mapping = header, key = "col_keys" ) |> 
+  colformat_num(j = 4:8, digits = 5.2) |> 
+  compose(j = 4, value = as_paragraph("粗率\nCrude Rate\n(1/10", as_sup("5"),")"),
+          part="header") |> 
+  compose(j = 5, value = as_paragraph("构成\nProportion\n(%)"),
+          part="header") |> 
+  compose(j = 6, value = as_paragraph("中标率\nASR China\n(1/10", as_sup("5"),")"),
+          part="header") |> 
+  compose(j = 7, value = as_paragraph("世标率\nASR World\n(1/10", as_sup("5"),")"),
+          part="header") |> 
+  merge_at(i = 1, j = c(1:8)) |> 
+  merge_at(i = 5, j = c(1:8)) |> 
+  align(align = "center", part="all") |> 
+  align(j = 1, align="right", part="body") |> 
+  fontsize(size = 10, part = "all") |> 
+  bold(bold = TRUE, part = "header") |> 
+  bold(j = 1, i = ~ !is.na(type), bold = TRUE, part = "body" ) |> 
+  width(j = c(1), width = 0.3) |> 
+  width(j = c(2), width = 1.2) |> 
+  width(j = c(3), width = 0.6) |> 
+  width(j = c(4, 5, 6, 7), width = 0.9) |> 
+  theme_booktabs()
+```
+
+
+```{r}
+#| output: asis
+k <- cancer_code - 100
+inc.max<-fb.age.max[fb.age.max$code==cancer_code,]$age
+mor.max<-sw.age.max[sw.age.max$code==cancer_code,]$age
+part3 <- paste(title_cn,"癌年龄别发病率在0-",fb.low[k],"岁年龄段处于较低水平，",fb.start[k],"岁以后快速上升，在",inc.max,"岁达到峰值；","年龄别死亡率在0-",sw.low[k],"岁年龄段处于较低水平，",sw.start[k],"岁以后快速上升，在",mor.max,"岁达到峰值；",ifelse(cancer_code %in% c(112,113,114,115,116),"",paste0("年龄别发病率和死亡率均呈现",ifelse(cancer_code %in% c(120),"女性高于男性","男性高于女性"),"的特点；")),"城市地区和农村地区年龄别率虽然有一定差异，但是总体趋势类同。",sep="")
+cat(part3, sep = '\n')
+cat(paste0("（ 图5-",k,"-a ）"))
+```
+
+
+```{r}
+#| fig-cap: !expr 'paste0("图5-",k,"-a: ", year, "年", province, "肿瘤登记地区",title_cn,"癌年龄别发病(死亡)率（1/10万）")'
+loc <- paste0("figures/", "Chapter5-", k)
+loc1<-paste(loc, "-1.png",sep="")
+knitr::include_graphics(loc1)
+```
+
+
+```{r}
+#| output: asis
+#| include: !expr as.numeric(cancer_code) %in% c(101:111, 117:122)
+#| eval: !expr as.numeric(cancer_code) %in% c(101:111, 117:122)
+area <- site.area |> 
+  filter(code == cancer_code) |> 
+  mutate(name2 = str_replace(string = name2,
+                             pattern = "Areas",
+                             replacement = ""))
+c.i.m <- area |> 
+    mutate(des=paste(name,"（",rate,"/10万）",sep=""),
+           des2=paste(name2," (",rate," per 100 000)",sep="")) |> 
+    filter(city == 1, sex == "男性", type == "incidence") |> 
+    group_by(order) |> 
+    group_split()
+
+c.i.f <- area |> 
+    mutate(des=paste(name,"（",rate,"/10万）",sep=""),
+           des2=paste(name2," (",rate," per 100 000)",sep="")) |> 
+    filter(city==1,sex=="女性",type=="incidence") |> 
+    group_by(order) |> 
+    group_split()
+  
+c.m.m <- area |> 
+    mutate(des=paste(name,"（",rate,"/10万）",sep=""),
+           des2=paste(name2," (",rate," per 100 000)",sep="")) |> 
+    filter(city==1,sex=="男性",type=="mortality") |> 
+    group_by(order) |> 
+    group_split()
+  
+c.m.f <- area |> 
+    mutate(des=paste(name,"（",rate,"/10万）",sep=""),
+           des2=paste(name2," (",rate," per 100 000)",sep="")) |> 
+    filter(city==1,sex=="女性",type=="mortality") |> 
+    group_by(order) |> 
+    group_split()
+  
+r.i.m <- area |> 
+    mutate(des=paste(name,"（",rate,"/10万）",sep=""),
+           des2=paste(name2," (",rate," per 100 000)",sep="")) |> 
+    filter(city==0,sex=="男性",type=="incidence") |> 
+    group_by(order) |> 
+    group_split()
+
+r.i.f <- area |> 
+    mutate(des=paste(name,"（",rate,"/10万）",sep=""),
+           des2=paste(name2," (",rate," per 100 000)",sep="")) |> 
+    filter(city==0,sex=="女性",type=="incidence") |> 
+    group_by(order) |> 
+    group_split()
+
+r.m.m <- area |> 
+    mutate(des=paste(name,"（",rate,"/10万）",sep=""),
+           des2=paste(name2," (",rate," per 100 000)",sep="")) |> 
+    filter(city==0,sex=="男性",type=="mortality") |> 
+    group_by(order) |> 
+    group_split()
+
+r.m.f <- area |> 
+    mutate(des=paste(name,"（",rate,"/10万）",sep=""),
+           des2=paste(name2," (",rate," per 100 000)",sep="")) |> 
+    filter(city==0,sex=="女性",type=="mortality") |> 
+    group_by(order) |> 
+    group_split()
+  
+part4 <- paste("在",num1,"个城市肿瘤登记地区中，男性",title_cn,"癌标化发病率最高的登记处是",c.i.m[[1]]$des,"，其次是",c.i.m[[2]]$des,"和",c.i.m[[3]]$des,"；女性标化发病率最高的是",c.i.f[[1]]$des,"，其次是",c.i.f[[2]]$des,"和",c.i.f[[3]]$des,"。",sep="")
+
+part5 <- paste("男性标化死亡率最高的登记处是",c.m.m[[1]]$des,"，其次是",c.m.m[[2]]$des,"和",c.m.m[[3]]$des,"；女性标化死亡率最高的是",c.m.f[[1]]$des,"，其次是",c.m.f[[2]]$des,"和",c.m.f[[3]]$des,"。",sep="")
+
+part6 <- paste("在",num2,"个农村肿瘤登记地区中，男性",title_cn,"癌标化发病率最高的登记处是",r.i.m[[1]]$des,"，其次是",r.i.m[[2]]$des,"和",r.i.m[[3]]$des,"；女性标化发病率最高的是",r.i.f[[1]]$des,"，其次是",r.i.f[[2]]$des,"和",r.i.f[[3]]$des,"。",sep="")
+    
+part7 <- paste("男性标化死亡率最高的登记处是",r.m.m[[1]]$des,"，其次是",r.m.m[[2]]$des,"和",r.m.m[[3]]$des,"；女性标化死亡率最高的是",r.m.f[[1]]$des,"，其次是",r.m.f[[2]]$des,"和",r.m.f[[3]]$des,"。",sep="")
+ 
+cat(part4, sep = "\n")
+cat(part5, sep = "\n")
+cat(paste0("（ 图5-",k,"-b ）"))
+cat("\n")
+```
+
+
+
+
+
+```{r}
+#| output: asis
+#| include: !expr as.numeric(cancer_code) %in% c(112:116)
+#| eval: !expr as.numeric(cancer_code) %in% c(112:116)
+area <- site.area |> 
+  filter(code == as.integer(cancer_code), sex == "合计") |> 
+    mutate(name2 = str_replace(string = name2,
+                               pattern = "Areas",
+                               replacement = ""))
+c.i <- area |> 
+    mutate(des = paste(name,"（",rate,"/10万）", sep=""),
+           des2 = paste(name2," (",rate," per 100 000)", sep="")) |> 
+    filter(city == 1, type=="incidence") |> 
+    group_by(order) |> 
+    group_split()
+  
+c.m <- area |> 
+    mutate(des = paste(name,"（",rate,"/10万）", sep=""),
+           des2 = paste(name2," (",rate," per 100 000)", sep="")) |> 
+    filter(city == 1, type == "mortality") |> 
+    group_by(order) |> 
+    group_split()
+  
+r.i <- area |> 
+    mutate(des = paste(name,"（",rate,"/10万）",sep=""),
+           des2 = paste(name2," (",rate," per 100 000)",sep="")) |> 
+    filter(city == 0, type == "incidence") |> 
+    group_by(order) |> 
+    group_split()
+  
+r.m <- area |> 
+    mutate(des = paste(name,"（",rate,"/10万）", sep=""),
+           des2 = paste(name2," (",rate," per 100 000)", sep="")) |> 
+    filter(city == 0, type == "mortality") |> 
+    group_by(order) |> 
+    group_split()
+
+part4 <- paste("在",num1,"个城市肿瘤登记地区中，",title_cn,"癌标化发病率最高的登记处是",c.i[[1]]$des,"，其次是",c.i[[2]]$des,"和",c.i[[3]]$des,"；", sep="")
+
+part5 <- paste("标化死亡率最高的登记处是",c.m[[1]]$des,"，其次是",c.m[[2]]$des,"和",c.m[[3]]$des,"。",sep="")
+
+part6 <- paste("在",num2,"个农村肿瘤登记地区中，",title_cn,"癌标化发病率最高的登记处是",r.i[[1]]$des,"，其次是",r.i[[2]]$des,"和",r.i[[3]]$des,"；",sep="")
+
+part7 <- paste("标化死亡率最高的登记处是",r.m[[1]]$des,"，其次是",r.m[[2]]$des,"和",r.m[[3]]$des,"。",sep="")
+ 
+cat(part4, sep = "\n")
+cat(part5, sep = "\n")
+cat(paste0("（ 图5-",k,"-b ）"))
+cat("\n")
+```
+
+
+```{r}
+#| fig-cap: !expr 'paste0("图5-",k,"-b: ",year,"年",province,"城市肿瘤登记地区",title_cn,"癌发病率和死亡率")'
+loc <- paste0("figures/", "Chapter5-", k)
+loc1<-paste(loc, "-2.png",sep="")
+knitr::include_graphics(loc1)
+```
+
+```{r}
+#| output: asis
+cat(part6, sep = "\n")
+cat(part7)
+cat(paste0("（ 图5-",k,"-c ）"))
+```
+
+
+```{r}
+#| fig-cap: !expr 'paste0("图5-",k,"-c: ",year,"年",province,"农村肿瘤登记地区",title_cn,"癌发病率和死亡率")'
+loc <- paste0("figures/", "Chapter5-", k)
+loc1<-paste(loc, "-3.png",sep="")
+knitr::include_graphics(loc1)
+```
+
+
+
+
+## `r title_ens` {-}
+
+```{r}
+#| output: asis
+#| include: !expr as.numeric(cancer_code) %in% c(101:111, 117:122)
+#| eval: !expr as.numeric(cancer_code) %in% c(101:111, 117:122)
+
+des11 <- gen_des1(type = "incidence", sex_ratio1, area_ratio1, cancer_code, lang = "english")
+des22 <- gen_des1(type = "mortality", sex_ratio2, area_ratio2, cancer_code, lang = "english")
+
+part11<-paste("In ",year,", there were ", site[1,3]," new cases diagnosed as ",title_en," cancer in registration areas of ",province_en,", China (",site[2,3]," males and ",site[3,3]," females, ",site[4,3]," in urban areas and ",site[7,3]," in rural areas), accounting for ",site[1,5],"% of new cases of all cancers. The crude incidence rate was ",site[1,4]," per 100 000, with the ASR China ",site[1,6]," per 100 000 and the ASR World ",site[1,7]," per 100 000, respectively. ",des11," The cumulative incidence rate for subjects aged 0 to 74 years was ",site[1,8],"%.",sep="")
+  
+part22<-paste("A total of ", site[10,3]," cases died of ",title_en," cancer in ",year," (",site[11,3]," males and ",site[12,3]," females, ",site[13,3]," in urban areas and ",site[16,3]," in rural areas), accounting for ",site[10,5],"% of all cancer deaths. The crude mortality rate was ",site[10,4]," per 100 000, with the ASR China of ",site[10,6]," per 100 000 and the ASR World of ",site[10,7]," per 100 000, respectively. ",des22," The cumulative mortality rate for subjects aged 0 to 74 years was ",site[10,8],"%.",sep="")
+
+cat(part11, sep = '\n')
+cat("\n")
+cat(part22)
+cat(paste0("(Table 5-", k, ")\n"))
+```
+
+
+```{r}
+#| output: asis
+#| include: !expr as.numeric(cancer_code) %in% c(112:116)
+#| eval: !expr as.numeric(cancer_code) %in% c(112:116)
+des11 <- gen_des1(type = "incidence", sex_ratio1, area_ratio1, cancer_code, lang = "english")
+des22 <- gen_des1(type = "mortality", sex_ratio2, area_ratio2, cancer_code, lang = "english")
+
+part11 <- paste("In ",year,", there were ", site[1,3]," new cases diagnosed as ",title_en," cancer in registration areas of ",province_en,", China (",site[2,3]," in urban areas and ",site[3,3]," in rural areas), accounting for ",site[1,5],"% of new cases of all cancers. The crude incidence rate was ",site[1,4]," per 100 000, with the ASR China ",site[1,6]," per 100 000 and the ASR World ",site[1,7]," per 100 000, respectively.",des11," The cumulative incidence rate for subjects aged 0 to 74 years was ",site[1,8],"%.",sep="")
+ 
+part22 <- paste("A total of ", site[4,3]," cases died of ",title_en," cancer in ",year," (",site[5,3]," in urban areas and ",site[6,3]," in rural areas), accounting for ",site[4,5],"% of all cancer deaths. The crude mortality rate was ",site[4,4]," per 100 000, with the ASR China ",site[4,6]," per 100 000 and the ASR World ",site[4,7]," per 100 000, respectively.",des22," The cumulative mortality rate for subjects aged 0 to 74 years was ",site[4,8],"%.",sep="")  
+
+cat(part11, sep = '\n')
+cat("\n")
+cat(part22)
+cat(paste0("(Table 5-", k, ")\n"))
+```
+
+```{r}
+#| output: asis
+part33 <- paste("The age specific incidence of ",title_en," cancer was low at age group of 0-",fb.low[k],", and it start increasing sharply at age group of  ",fb.start[k],", it reached the peak at age of ",inc.max,". ","The age specific mortality was low at age group of 0-",sw.low[k],", and it start increasing sharply at age group of ",sw.start[k],", it reached the peak at age of ",mor.max,".",ifelse(cancer_code %in% c(112,113,114,115,116),"",paste0(" Age specific incidence and mortality were all higher in",ifelse(cancer_code %in% c(120),"females than in males, ","males than in females, ")))," The change pattern of age specific incidence and mortality were similar in urban areas and rural areas.",sep="")
+cat(part33, sep="\n")
+cat(paste0("(Figure 5-",k,"-a )"))
+```
+
+
+```{r}
+#| output: asis
+#| include: !expr as.numeric(cancer_code) %in% c(101:111, 117:122)
+#| eval: !expr as.numeric(cancer_code) %in% c(101:111, 117:122)
+ii <- title_en
+part44 <- paste("Among the ",num1," urban cancer registries, the ASR China incidence rate of ",ii," cancer in males was highest in ",c.i.m[[1]]$des2," followed by ",c.i.m[[2]]$des2,", and ",c.i.m[[3]]$des2,". For females, it was highest in ",c.i.f[[1]]$des2,", followed by ",c.i.f[[2]]$des2,", and ",c.i.f[[3]]$des2,".",sep="")
+
+part55 <- paste("The ASR China mortality rate of ",ii," cancer in males was highest in ",c.m.m[[1]]$des2," followed by ",c.m.m[[2]]$des2,", and ",c.m.m[[3]]$des2,". For females, it was highest in ",c.m.f[[1]]$des2,", followed by ",c.m.f[[2]]$des2,", and ",c.m.f[[3]]$des2,".",sep="")
+  
+part66 <- paste("Among the ",num2," rural cancer registries, the ASR China incidence rate of ",ii," cancer in males was highest in ",r.i.m[[1]]$des2," followed by ",r.i.m[[2]]$des2,", and ",r.i.m[[3]]$des2,". For females, it was highest in ",r.i.f[[1]]$des2,", followed by ",r.i.f[[2]]$des2,", and ",r.i.f[[3]]$des2,".",sep="")
+  
+part77 <- paste("The ASR China mortality rate of ",ii," cancer in males was highest in ",r.m.m[[1]]$des2," followed by ",r.m.m[[2]]$des2,", and ",r.m.m[[3]]$des2,". For females, it was highest in ",r.m.f[[1]]$des2,", followed by ",r.m.f[[2]]$des2,", and ",r.m.f[[3]]$des2,".",sep="")
+
+cat(part44, sep = "\n")
+cat(part55, sep = "\n")
+cat(paste0("(Figure 5-",k,"-b)"))
+cat("\n")
+cat("\n")
+cat(part66, sep = "\n")
+cat(part77, sep = "\n")
+cat(paste0("(Figure 5-",k,"-c)"))
+```
+
+
+```{r}
+#| output: asis
+#| include: !expr as.numeric(cancer_code) %in% c(112:116)
+#| eval: !expr as.numeric(cancer_code) %in% c(112:116)
+ii <- title_en
+part44 <- paste("Among the ",num1," urban cancer registries, the ASR China incidence rate of ",ii," was highest in ",c.i[[1]]$des2,", followed by ",c.i[[2]]$des2,", and ",c.i[[3]]$des2,".",sep="")
+part55 <- paste("The ASR China mortality rate of ",ii," cancer was highest in ",c.m[[1]]$des2,", followed by ",c.m[[2]]$des2,", and ",c.m[[3]]$des2,".",sep="")
+part66 <- paste("Among the ",num2," rural cancer registries, the ASR China incidence rate of ",ii," cancer was highest in ",r.i[[1]]$des2,", followed by ",r.i[[2]]$des2,", and ",r.i[[3]]$des2,".",sep="")
+part77 <- paste("The ASR China mortality rate of ",ii," cancer was highest in ",r.m[[1]]$des2,", followed by ",r.m[[2]]$des2,", and ",r.m[[3]]$des2,".",sep="")
+
+cat(part44, sep = "\n")
+cat(part55, sep = "\n")
+cat(paste0("(Figure 5-",k,"-b)"))
+cat("\n")
+cat("\n")
+cat(part66, sep = "\n")
+cat(part77, sep = "\n")
+cat(paste0("(Figure 5-",k,"-c)"))
+```

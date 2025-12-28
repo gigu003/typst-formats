@@ -1,0 +1,26 @@
+{
+    "id": "ACBD8275",
+    "path": "~/Documents/3_Resources/CR_Quarto_Templates/typst-formats/qcard/_extensions/qcard/shortcodes.lua",
+    "project_path": "_extensions/qcard/shortcodes.lua",
+    "type": "lua",
+    "hash": "1219502274",
+    "contents": "",
+    "dirty": false,
+    "created": 1758330345844.0,
+    "source_on_save": false,
+    "relative_order": 5,
+    "properties": {
+        "source_window_id": "",
+        "Source": "Source",
+        "cursorPosition": "11,0",
+        "scrollLine": "0"
+    },
+    "folds": "",
+    "lastKnownWriteTime": 1758330355,
+    "encoding": "UTF-8",
+    "collab_server": "",
+    "source_window": "",
+    "last_content_update": 1758330355653,
+    "read_only": false,
+    "read_only_alternatives": []
+}

@@ -1,0 +1,12 @@
+---
+title: "淋巴瘤(C33-34)"
+registry: "2022河南省"
+report: "肿瘤登记年报"
+year: 2022
+mainfont: "Lantinghei SC"
+format:
+  qcfact-typst:
+    height: 524.3mm
+    width: 370.5mm
+    header-color: rgb(159,70,60)
+---
