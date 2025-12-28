@@ -1,17 +1,20 @@
 # Qsight Format
 
+`qsight-typst` is a Quarto Typst format extension for writing blog posts.
+
+![](qsight-blog.png)
+
 ## Installing
 
-_TODO_: Replace the `<github-organization>` with your GitHub organization.
-
-```bash
-quarto use template <github-organization>/qsight
-```
-
-This will install the format extension and create an example qmd file
+You can install the format extension and create an example qmd file
 that you can use as a starting place for your document.
 
-## Using
+```bash
+quarto use template gigu003/typst-formats/qsight
+```
 
-_TODO_: Describe how to use your format.
+or you can install the clean version extension without qmd file.
 
+```bash
+quarto install extension gigu003/typst-formats/qsight
+```

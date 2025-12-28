@@ -1,17 +1,19 @@
-# Letter Format
+# Letter-typst
+
+`letter-typst` is a typst format as a format of quarto extension.
 
 ## Installing
 
-_TODO_: Replace the `<github-organization>` with your GitHub organization.
+You can install the extension with a template `qmd` document that you can use as a starting place for your document.
 
 ```bash
-quarto use template <github-organization>/letter
+quarto use template gigu003/typst-formats/letter
 ```
 
-This will install the format extension and create an example qmd file
-that you can use as a starting place for your document.
+or you can install the format extension without a template `qmd` document.
 
-## Using
 
-_TODO_: Describe how to use your format.
+```bash
+quarto install extension gigu003/typst-formats/letter
+```
 

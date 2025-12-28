@@ -1,17 +1,26 @@
-# Card Format
+# Qcard-typst Format
+
+`qcard-typst` is a typst format as a quarto extension.
+
+Title page:
+
+![](titlepage.png)
+
+Last page:
+
+![](lastpage.png)
 
 ## Installing
 
-_TODO_: Replace the `<github-organization>` with your GitHub organization.
-
-```bash
-quarto use template <github-organization>/card
-```
-
-This will install the format extension and create an example qmd file
+You can install the format extension and create an example qmd file
 that you can use as a starting place for your document.
 
-## Using
+```bash
+quarto use template gigu003/typst-formats/qcard
+```
 
-_TODO_: Describe how to use your format.
+or you can install the format extension without an example qmd file.
 
+```bash
+quarto use template gigu003/typst-formats/qcard
+```

@@ -16,7 +16,7 @@
   sender: none,
   recipient: none,
   date: none,
-  logo: "./_extensions/letter/logo.png",
+  logo: "_assets/logo/logo.png",
   paper: "a4",
   mainfont: "STsong",
   fontsize: 12pt,

@@ -9,13 +9,13 @@
 If you would like to add the clean theme to an existing directory:
 
 ``` bash
-quarto install extension gigu003/typst-templates/qcv
+quarto install extension gigu003/typst-formats/qcv
 ```
 
 or you can use a Quarto template that bundles a .qmd starter file:
 
 ``` bash
-quarto use template gigu003/typst-templates/qcv
+quarto use template gigu003/typst-formats/qcv
 ```
 
 This will install the format extension and create an example qmd file that you can use as a starting place for your document.

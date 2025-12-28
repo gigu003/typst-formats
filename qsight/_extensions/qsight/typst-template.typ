@@ -38,8 +38,8 @@
   pagenumbering: "1",
   theme-color: red,
   first-line-indent: 0em,
-  heading-image: "bird.jpeg",
-  card-image: "dog.png",
+  heading-image: "_assets/imgs/bird.jpeg",
+  card-image: "_assets/imgs/dog.png",
   card-bg: luma(250),
   doc,
 ) = {
@@ -269,7 +269,7 @@ v(0.5em)
   grid(columns: (1fr, 3fr, auto), gutter: 0.8em,
     figure(
     numbering: none,
-    image("qiong.png", width: 90%),
+    image("_assets/imgs/qiong.png", width: 90%),
     caption: text(fill: luma(40))[陈#h(0.5em)琼]
   ),
   place(top)[
@@ -291,11 +291,11 @@ v(0.5em)
   columns: (2fr, 2fr),
   figure(
     numbering: none,
-    image("qsight.png", width: 90%),
+    image("_assets/imgs/qsight.png", width: 90%),
     caption: [Qsight博客]),
   figure(
     numbering: none,
-    image("wechat.jpg", width: 90%),
+    image("_assets/imgs/wechat.jpg", width: 90%),
     caption: [微信公众号]),
   )
   v(2em)
