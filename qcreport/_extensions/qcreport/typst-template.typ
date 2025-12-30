@@ -16,7 +16,7 @@
   cover-note: none,
   authors: none,
   date: none,
-  logo: "./_extensions/qcreport/logo.png",
+  logo: "_assets/logos/logo.png",
   registry: none,
   abstract: none,
   header: " ",

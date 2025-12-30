@@ -1,13 +1,25 @@
-# Typst Qcreport Format
+# Qcreport typst format
+
+`qcreport-typst` a Quarto extension offering a Typst-based format designed for cancer registry reporting.
+
 
 ## Installing
 
+You can install the format extension and create an example qmd file
+that you can use as a starting place for your document.
+
+
 ```bash
-quarto use template gigu003/typst-templates/qcreport
+quarto use template gigu003/typst-formats/qcreport
 ```
 
-This will install the format extension and create an example qmd file
-that you can use as a starting place for your document.
+You can also install the extension without an example qmd file.
+
+
+```bash
+quarto install extension gigu003/typst-formats/qcreport
+```
+
 
 ## Using
 

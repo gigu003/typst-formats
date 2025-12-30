@@ -6,7 +6,7 @@ contributes:
   formats:
     typst:
       format-resources:
-        - logo.png
+        - _assets/
       template-partials:
         - typst-template.typ
         - typst-show.typ
