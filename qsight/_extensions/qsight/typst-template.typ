@@ -76,7 +76,7 @@
   ]
   )
   
-  set par(justify: true, leading: 1.5em, spacing: 2em,
+  set par(justify: true, leading: 1.1em, spacing: 1.5em,
           first-line-indent: (amount: first-line-indent, all: true))
   set text(lang: lang,
            region: region,
@@ -161,8 +161,8 @@ show raw.where(block: false): text.with(
   fill: blue.darken(50%)
 )
 show raw.where(block: true): it => {
-  set par(leading: 0.9em)
-  set text(font: "Menlo", size: 0.9em)
+  set par(leading: 0.8em)
+  set text(font: "Menlo", size: 0.8em)
   it
 }
 
