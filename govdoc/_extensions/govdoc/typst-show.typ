@@ -12,8 +12,15 @@
 //   - https://typst.app/docs/tutorial/making-a-template/
 //   - https://github.com/typst/templates
 #show: doc => article(
-$if(institute)$
-  institute: [$for(institute)$$institute$$sep$\ $endfor$],
+$if(institutes)$
+  institutes: (
+$for(institutes)$
+    (
+     name: "$it.name$",
+     tracking: $it.tracking$
+    ),
+$endfor$
+  ),
 $endif$
 $if(proofreading)$
   proofreading: [$proofreading$],
@@ -60,6 +67,19 @@ $if(classify)$
 $endif$
 $if(emergency)$
   emergency: [$emergency$],
+$endif$
+$if(title_font)$
+  title_font: "$title_font$",
+$endif$
+$if(header_font)$
+  header_font: (
+    h1: "$header_font.h1$",
+    h2: "$header_font.h2$",
+    h3: "$header_font.h3$",
+  ),
+$endif$
+$if(mainfont)$
+  mainfont: "$mainfont$",
 $endif$
 $if(fontsize)$
   fontsize: $fontsize$,
