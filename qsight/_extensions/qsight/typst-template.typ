@@ -38,8 +38,8 @@
   pagenumbering: "1",
   theme-color: red,
   first-line-indent: 0em,
-  heading-image: "_assets/imgs/bird.jpeg",
-  card-image: "_assets/imgs/dog.png",
+  heading-image: "_assets/images/bird.jpeg",
+  card-image: "_assets/images/dog.png",
   card-bg: luma(250),
   doc,
 ) = {
@@ -76,7 +76,7 @@
   ]
   )
   
-  set par(justify: true, leading: 1.1em, spacing: 1.5em,
+  set par(justify: true, leading: 1.5em, spacing: 2em,
           first-line-indent: (amount: first-line-indent, all: true))
   set text(lang: lang,
            region: region,
@@ -157,14 +157,6 @@ show enum: it => block[
 show link: underline
 show strong: set text(weight: "bold", fill: theme-color)
 show emph: set text(weight: "bold", fill: theme-color)
-show raw.where(block: false): text.with(
-  fill: blue.darken(50%)
-)
-show raw.where(block: true): it => {
-  set par(leading: 0.8em)
-  set text(font: "Menlo", size: 0.8em)
-  it
-}
 
 show quote.where(block: true): it => {
   set par(leading: 1.2em)
@@ -269,7 +261,7 @@ v(0.5em)
   grid(columns: (1fr, 3fr, auto), gutter: 0.8em,
     figure(
     numbering: none,
-    image("_assets/imgs/qiong.png", width: 90%),
+    image("_assets/images/qiong.png", width: 90%),
     caption: text(fill: luma(40))[陈#h(0.5em)琼]
   ),
   place(top)[
@@ -291,11 +283,11 @@ v(0.5em)
   columns: (2fr, 2fr),
   figure(
     numbering: none,
-    image("_assets/imgs/qsight.png", width: 90%),
+    image("_assets/images/qsight.png", width: 90%),
     caption: [Qsight博客]),
   figure(
     numbering: none,
-    image("_assets/imgs/wechat.jpg", width: 90%),
+    image("_assets/images/wechat.jpg", width: 90%),
     caption: [微信公众号]),
   )
   v(2em)
@@ -348,5 +340,25 @@ v(0.5em)
   if title != none {
     card-title
   }
+  
+  // 设置Card用于用于网站图片
+  pagebreak()
+  set page(height: 157.5mm, footer: card-footer, fill: card-bg)
+  if title != none {
+      card-title
+  }
+  if description != none {
+grid(
+  columns: (auto, auto, auto),
+  h(1.2em),
+  block(
+    inset: (top: 1em, bottom: 1em, left: 1em, right: 1em),
+    stroke: (left: 3pt + theme-color),
+    [#text(size:0.95em, style: "italic", weight: 200, fill: luma(50))[#description]]
+    ),
+  h(1em)
+  )
+  }
+  
   
 }

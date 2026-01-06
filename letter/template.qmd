@@ -6,8 +6,6 @@ date: today
 date-format: "YYYY年M月D日"
 lang: zh
 mainfont: "STsong"
-execute: 
-  echo: false
 format:
   letter-typst:
     papersize: "a4"
